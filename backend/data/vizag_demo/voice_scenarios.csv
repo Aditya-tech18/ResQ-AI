@@ -1,0 +1,7 @@
+scenario_id,participant,participant_id,language,intent,utterance,expected_action
+VOICE-001,Ravi,DRV-001,hi,report_vehicle_breakdown,मेरी बाइक खराब हो गई है। मेरे दो पार्सल डिलीवर होने बाकी हैं।,create_rescue_case
+VOICE-002,Suresh,DRV-002,te,request_language_switch,నాకు హిందీ అర్థం కావడం లేదు. దయచేసి తెలుగులో మాట్లాడండి.,switch_to_telugu
+VOICE-003,Suresh,DRV-002,te,accept_rescue,"సరే, నేను రవి దగ్గరకు వెళ్లి పార్సెల్ తీసుకుంటాను.",record_driver_acceptance
+VOICE-004,Amit,DRV-003,hi,accept_rescue,"हाँ, मैं रवि की लोकेशन पर आकर पार्सल ले सकता हूँ।",record_driver_acceptance
+VOICE-005,Customer,CUST-0001,hi,select_delivery_slot,मुझे दोपहर दो बजे से शाम छह बजे तक डिलीवरी चाहिए।,request_slot_03
+VOICE-006,Customer,CUST-0002,te,select_delivery_slot,నాకు మధ్యాహ్నం రెండు గంటల నుంచి సాయంత్రం ఆరు గంటల వరకు డెలివరీ కావాలి.,request_slot_03

@@ -1,0 +1,9 @@
+#resq-live-report { padding:20px; border:1px solid #e2e8f0; border-radius:16px; background:#fff; color:#0f172a; }
+.resq-report-heading { display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:16px; flex-wrap:wrap; }
+.resq-report-heading strong { font-size:19px; }
+.resq-report-heading span { color:#475569; }
+.resq-report-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; margin-bottom:14px; }
+.resq-report-cell { padding:13px; border-radius:10px; background:#f1f5f9; min-width:0; overflow-wrap:anywhere; }
+.resq-report-cell small { display:block; color:#64748b; margin-bottom:5px; }
+.resq-report-cell strong { font-size:15px; }
+@media(max-width:520px) { .resq-report-grid { grid-template-columns:1fr; } }

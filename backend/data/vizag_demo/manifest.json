@@ -1,0 +1,40 @@
+{
+  "project": "DispatchResolve AI",
+  "dataset_name": "Vizag Synthetic Logistics Demo",
+  "dataset_version": "1.0.0",
+  "synthetic": true,
+  "city": "Visakhapatnam",
+  "state": "Andhra Pradesh",
+  "country": "India",
+  "random_seed": 20261106,
+  "demo_date": "2026-11-07",
+  "driver_count": 30,
+  "customer_count": 100,
+  "shipment_count": 150,
+  "supported_languages": [
+    "hi",
+    "te"
+  ],
+  "features": [
+    "delivery_slot_booking",
+    "emergency_delivery_rescue"
+  ],
+  "limitations": [
+    "Coordinates are illustrative.",
+    "Phone aliases are not dialable.",
+    "Route times are simulated.",
+    "No live GPS is included.",
+    "No real customer data is included."
+  ],
+  "driver_status_counts": {
+    "emergency": 1,
+    "available": 14,
+    "offline": 2,
+    "busy": 13
+  },
+  "shipment_status_counts": {
+    "out_for_delivery": 59,
+    "assigned": 42,
+    "pending": 49
+  }
+}

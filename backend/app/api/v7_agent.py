@@ -1,0 +1,80 @@
+"""Browser-microphone voice demo with optional Gemini conversation.
+Browser recognition/TTS is NOT Gnani Prisma/Timbre. Provider endpoints are not guessed.
+"""
+import json
+import os
+import re
+import httpx
+from fastapi import APIRouter, HTTPException
+from pydantic import BaseModel, Field
+
+from app.api.v5_flow import state as rescue_state
+router = APIRouter(prefix="/api/v7", tags=["ResQ voice demo"])
+
+class Turn(BaseModel):
+    driver: str = Field(pattern="^(Amit|Suresh)$")
+    language: str = Field(pattern="^(hi|te)$")
+    transcript: str = Field(min_length=1, max_length=3000)
+    history: list[dict[str, str]] = Field(default_factory=list, max_length=12)
+
+@router.get("/capabilities")
+def capabilities():
+    return {"gemini": bool(os.getenv("GEMINI_API_KEY")), "gnani_prisma": False,
+            "gnani_evon": False, "gnani_timbre": False,
+            "audio": "Browser speech recognition and speech synthesis when supported",
+            "provider_note": "Gnani needs verified API contracts; not integrated."}
+
+@router.post("/turn")
+def turn(req: Turn):
+    """Extract grounded details, and ask one concise next question."""
+    key = os.getenv("GEMINI_API_KEY", "").strip()
+    if not key:
+        raise HTTPException(503, "GEMINI_API_KEY not set. Enable Gemini for AI dialogue.")
+    model = os.getenv("RESQ_GEMINI_MODEL", "gemini-3-flash-preview")
+    if not re.fullmatch(r"[a-zA-Z0-9._-]+", model):
+        raise HTTPException(400, "Invalid model name")
+    incident = rescue_state().get("incident") or {}
+    location = str(incident.get("location") or "Gajuwaka, Visakhapatnam")[:160]
+    parcels = int(incident.get("parcels") or 6)
+    breakdown_driver = str(incident.get("driver_name") or "Raju")[:80]
+    recent = [item for item in req.history[-10:] if item.get("role") in {"AI", "Driver"}]
+
+    prompt = (f"KNOWN INCIDENT FACTS: breakdown driver {breakdown_driver}; location {location}; pending parcels {parcels}. Answer location questions directly. Never confuse pending parcels with accepted parcels. " 
+              "You are ResQ AI, an efficient delivery-rescue voice dispatcher. "
+              "This is a local browser demo, not a real telephone call. "
+              "Driver is " + req.driver + ". Preferred language is " +
+              ("Telugu with simple English" if req.language == "te" else "Hindi with simple English") + ". "
+              "Extract facts ONLY if explicitly stated in the conversation; no invented ETA, parcel count, "
+              "destination or acceptance. Consider earlier user turns as well. "
+              "Do not confuse AI questions with driver answers. "
+              "Ask ONE short relevant next question about willingness, number of parcels, ETA or destination, "
+              "prioritizing missing fields. If declined, thank and finish. "
+              "If all fields known and driver explicitly accepted, thank and finish. "
+              "For unrelated replies, briefly redirect. Reply in the driver's preferred language. "
+              "Return JSON object with reply (short, <=35 words), accepted (true/false/null), "
+              "eta_minutes (integer/null), parcel_capacity (integer/null), destination (string/null), "
+              "complete (boolean). User conversation JSON: " +
+              json.dumps(recent + [{"role": "driver", "text": req.transcript}], ensure_ascii=False))
+    try:
+        with httpx.Client(timeout=25.0) as client:
+            response = client.post(
+                f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent",
+                headers={"x-goog-api-key": key, "Content-Type": "application/json"},
+                json={"contents": [{"parts": [{"text": prompt}]}],
+                      "generationConfig": {"responseMimeType": "application/json", "temperature": 0.1}},
+            )
+            response.raise_for_status()
+            obj = json.loads(response.json()["candidates"][0]["content"]["parts"][0]["text"])
+    except (httpx.HTTPError, ValueError, KeyError, IndexError, TypeError) as exc:
+        raise HTTPException(502, "Gemini request failed. Check model, key and network.") from exc
+    if not isinstance(obj, dict):
+        raise HTTPException(502, "Invalid Gemini response")
+    eta, cap, accepted, dest = (obj.get(k) for k in ("eta_minutes", "parcel_capacity", "accepted", "destination"))
+    reply = obj.get("reply")
+    return {"reply": reply[:350] if isinstance(reply, str) and reply.strip() else "Could you confirm the rescue details?",
+            "eta_minutes": eta if type(eta) is int and 1 <= eta <= 240 else None,
+            "parcel_capacity": cap if type(cap) is int and 0 <= cap <= 100 else None,
+            "accepted": accepted if type(accepted) is bool else None,
+            "destination": dest[:160] if isinstance(dest, str) and dest.strip() else None,
+            "complete": obj.get("complete") is True,
+            "source": "GEMINI_FROM_BROWSER_TRANSCRIPT_NOT_VERIFIED_AUDIO"}

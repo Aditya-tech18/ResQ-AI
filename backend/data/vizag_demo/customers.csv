@@ -1,0 +1,101 @@
+customer_id,name,phone_alias,preferred_language,location_id,address_line,latitude,longitude,city,state,country,merchant_id
+CUST-0001,Pooja Naidu,DEMO-CUSTOMER-0001,hi,LOC-006,"Demo Address 1, Gajuwaka",17.686273,83.211394,Visakhapatnam,Andhra Pradesh,India,MERCHANT-DEMO-001
+CUST-0002,Manoj Patel,DEMO-CUSTOMER-0002,te,LOC-011,"Demo Address 2, Rushikonda",17.781537,83.384819,Visakhapatnam,Andhra Pradesh,India,MERCHANT-DEMO-001
+CUST-0003,Lakshmi Patel,DEMO-CUSTOMER-0003,te,LOC-001,"Demo Address 3, MVP Colony",17.740747,83.337178,Visakhapatnam,Andhra Pradesh,India,MERCHANT-DEMO-001
+CUST-0004,Srinivas Rao,DEMO-CUSTOMER-0004,te,LOC-007,"Demo Address 4, NAD Junction",17.744892,83.25146,Visakhapatnam,Andhra Pradesh,India,MERCHANT-DEMO-001
+CUST-0005,Manoj Yadav,DEMO-CUSTOMER-0005,te,LOC-008,"Demo Address 5, Beach Road",17.717969,83.333912,Visakhapatnam,Andhra Pradesh,India,MERCHANT-DEMO-001
+CUST-0006,Ramesh Verma,DEMO-CUSTOMER-0006,hi,LOC-009,"Demo Address 6, Akkayyapalem",17.732586,83.29059,Visakhapatnam,Andhra Pradesh,India,MERCHANT-DEMO-001
+CUST-0007,Pooja Verma,DEMO-CUSTOMER-0007,te,LOC-006,"Demo Address 7, Gajuwaka",17.683679,83.210628,Visakhapatnam,Andhra Pradesh,India,MERCHANT-DEMO-001
+CUST-0008,Manoj Naidu,DEMO-CUSTOMER-0008,hi,LOC-005,"Demo Address 8, Seethammadhara",17.742684,83.307461,Visakhapatnam,Andhra Pradesh,India,MERCHANT-DEMO-001
+CUST-0009,Pooja Rao,DEMO-CUSTOMER-0009,hi,LOC-003,"Demo Address 9, Dwaraka Nagar",17.728065,83.299969,Visakhapatnam,Andhra Pradesh,India,MERCHANT-DEMO-001
+CUST-0010,Pooja Reddy,DEMO-CUSTOMER-0010,hi,LOC-011,"Demo Address 10, Rushikonda",17.782414,83.385388,Visakhapatnam,Andhra Pradesh,India,MERCHANT-DEMO-001
+CUST-0011,Anjali Verma,DEMO-CUSTOMER-0011,te,LOC-005,"Demo Address 11, Seethammadhara",17.741164,83.305845,Visakhapatnam,Andhra Pradesh,India,MERCHANT-DEMO-001
+CUST-0012,Manoj Naidu,DEMO-CUSTOMER-0012,te,LOC-006,"Demo Address 12, Gajuwaka",17.684011,83.208917,Visakhapatnam,Andhra Pradesh,India,MERCHANT-DEMO-001
+CUST-0013,Kavya Yadav,DEMO-CUSTOMER-0013,hi,LOC-002,"Demo Address 13, Siripuram",17.724447,83.314184,Visakhapatnam,Andhra Pradesh,India,MERCHANT-DEMO-001
+CUST-0014,Vijay Patel,DEMO-CUSTOMER-0014,te,LOC-004,"Demo Address 14, Maddilapalem",17.736306,83.319302,Visakhapatnam,Andhra Pradesh,India,MERCHANT-DEMO-001
+CUST-0015,Neha Patel,DEMO-CUSTOMER-0015,te,LOC-008,"Demo Address 15, Beach Road",17.71879,83.333595,Visakhapatnam,Andhra Pradesh,India,MERCHANT-DEMO-001
+CUST-0016,Lakshmi Singh,DEMO-CUSTOMER-0016,te,LOC-012,"Demo Address 16, Madhurawada",17.800668,83.354687,Visakhapatnam,Andhra Pradesh,India,MERCHANT-DEMO-001
+CUST-0017,Srinivas Singh,DEMO-CUSTOMER-0017,te,LOC-006,"Demo Address 17, Gajuwaka",17.686001,83.208966,Visakhapatnam,Andhra Pradesh,India,MERCHANT-DEMO-001
+CUST-0018,Anusha Yadav,DEMO-CUSTOMER-0018,te,LOC-010,"Demo Address 18, PM Palem",17.785688,83.3496,Visakhapatnam,Andhra Pradesh,India,MERCHANT-DEMO-001
+CUST-0019,Swathi Verma,DEMO-CUSTOMER-0019,hi,LOC-008,"Demo Address 19, Beach Road",17.718892,83.333501,Visakhapatnam,Andhra Pradesh,India,MERCHANT-DEMO-001
+CUST-0020,Pooja Yadav,DEMO-CUSTOMER-0020,hi,LOC-003,"Demo Address 20, Dwaraka Nagar",17.728888,83.298583,Visakhapatnam,Andhra Pradesh,India,MERCHANT-DEMO-001
+CUST-0021,Kiran Prasad,DEMO-CUSTOMER-0021,te,LOC-012,"Demo Address 21, Madhurawada",17.801249,83.355931,Visakhapatnam,Andhra Pradesh,India,MERCHANT-DEMO-001
+CUST-0022,Swathi Verma,DEMO-CUSTOMER-0022,hi,LOC-002,"Demo Address 22, Siripuram",17.722371,83.313769,Visakhapatnam,Andhra Pradesh,India,MERCHANT-DEMO-001
+CUST-0023,Divya Rao,DEMO-CUSTOMER-0023,te,LOC-009,"Demo Address 23, Akkayyapalem",17.730802,83.291021,Visakhapatnam,Andhra Pradesh,India,MERCHANT-DEMO-001
+CUST-0024,Srinivas Yadav,DEMO-CUSTOMER-0024,te,LOC-003,"Demo Address 24, Dwaraka Nagar",17.72952,83.300367,Visakhapatnam,Andhra Pradesh,India,MERCHANT-DEMO-001
+CUST-0025,Anusha Kumar,DEMO-CUSTOMER-0025,te,LOC-002,"Demo Address 25, Siripuram",17.721934,83.314956,Visakhapatnam,Andhra Pradesh,India,MERCHANT-DEMO-001
+CUST-0026,Kiran Sharma,DEMO-CUSTOMER-0026,te,LOC-012,"Demo Address 26, Madhurawada",17.801788,83.3543,Visakhapatnam,Andhra Pradesh,India,MERCHANT-DEMO-001
+CUST-0027,Neha Singh,DEMO-CUSTOMER-0027,hi,LOC-010,"Demo Address 27, PM Palem",17.784262,83.350869,Visakhapatnam,Andhra Pradesh,India,MERCHANT-DEMO-001
+CUST-0028,Ramesh Verma,DEMO-CUSTOMER-0028,te,LOC-003,"Demo Address 28, Dwaraka Nagar",17.727973,83.299916,Visakhapatnam,Andhra Pradesh,India,MERCHANT-DEMO-001
+CUST-0029,Kiran Yadav,DEMO-CUSTOMER-0029,hi,LOC-007,"Demo Address 29, NAD Junction",17.743371,83.251886,Visakhapatnam,Andhra Pradesh,India,MERCHANT-DEMO-001
+CUST-0030,Sita Kumar,DEMO-CUSTOMER-0030,te,LOC-012,"Demo Address 30, Madhurawada",17.800941,83.353839,Visakhapatnam,Andhra Pradesh,India,MERCHANT-DEMO-001
+CUST-0031,Arjun Yadav,DEMO-CUSTOMER-0031,te,LOC-008,"Demo Address 31, Beach Road",17.718139,83.334312,Visakhapatnam,Andhra Pradesh,India,MERCHANT-DEMO-001
+CUST-0032,Pooja Yadav,DEMO-CUSTOMER-0032,te,LOC-004,"Demo Address 32, Maddilapalem",17.73417,83.320188,Visakhapatnam,Andhra Pradesh,India,MERCHANT-DEMO-001
+CUST-0033,Divya Naidu,DEMO-CUSTOMER-0033,hi,LOC-006,"Demo Address 33, Gajuwaka",17.683712,83.208974,Visakhapatnam,Andhra Pradesh,India,MERCHANT-DEMO-001
+CUST-0034,Arjun Patel,DEMO-CUSTOMER-0034,te,LOC-006,"Demo Address 34, Gajuwaka",17.684828,83.208614,Visakhapatnam,Andhra Pradesh,India,MERCHANT-DEMO-001
+CUST-0035,Sita Reddy,DEMO-CUSTOMER-0035,te,LOC-012,"Demo Address 35, Madhurawada",17.801107,83.354601,Visakhapatnam,Andhra Pradesh,India,MERCHANT-DEMO-001
+CUST-0036,Kavya Patel,DEMO-CUSTOMER-0036,te,LOC-008,"Demo Address 36, Beach Road",17.71887,83.331771,Visakhapatnam,Andhra Pradesh,India,MERCHANT-DEMO-001
+CUST-0037,Anjali Reddy,DEMO-CUSTOMER-0037,hi,LOC-008,"Demo Address 37, Beach Road",17.719627,83.333053,Visakhapatnam,Andhra Pradesh,India,MERCHANT-DEMO-001
+CUST-0038,Neha Patel,DEMO-CUSTOMER-0038,hi,LOC-005,"Demo Address 38, Seethammadhara",17.741656,83.30589,Visakhapatnam,Andhra Pradesh,India,MERCHANT-DEMO-001
+CUST-0039,Vijay Yadav,DEMO-CUSTOMER-0039,hi,LOC-003,"Demo Address 39, Dwaraka Nagar",17.727771,83.300083,Visakhapatnam,Andhra Pradesh,India,MERCHANT-DEMO-001
+CUST-0040,Vijay Singh,DEMO-CUSTOMER-0040,hi,LOC-003,"Demo Address 40, Dwaraka Nagar",17.729495,83.301312,Visakhapatnam,Andhra Pradesh,India,MERCHANT-DEMO-001
+CUST-0041,Sita Reddy,DEMO-CUSTOMER-0041,te,LOC-001,"Demo Address 41, MVP Colony",17.739858,83.338374,Visakhapatnam,Andhra Pradesh,India,MERCHANT-DEMO-001
+CUST-0042,Swathi Patel,DEMO-CUSTOMER-0042,te,LOC-008,"Demo Address 42, Beach Road",17.718094,83.331507,Visakhapatnam,Andhra Pradesh,India,MERCHANT-DEMO-001
+CUST-0043,Meena Prasad,DEMO-CUSTOMER-0043,te,LOC-001,"Demo Address 43, MVP Colony",17.740205,83.33842,Visakhapatnam,Andhra Pradesh,India,MERCHANT-DEMO-001
+CUST-0044,Kiran Naidu,DEMO-CUSTOMER-0044,hi,LOC-002,"Demo Address 44, Siripuram",17.722329,83.314564,Visakhapatnam,Andhra Pradesh,India,MERCHANT-DEMO-001
+CUST-0045,Sita Rao,DEMO-CUSTOMER-0045,hi,LOC-010,"Demo Address 45, PM Palem",17.78416,83.351297,Visakhapatnam,Andhra Pradesh,India,MERCHANT-DEMO-001
+CUST-0046,Neha Singh,DEMO-CUSTOMER-0046,hi,LOC-012,"Demo Address 46, Madhurawada",17.802216,83.354959,Visakhapatnam,Andhra Pradesh,India,MERCHANT-DEMO-001
+CUST-0047,Srinivas Prasad,DEMO-CUSTOMER-0047,hi,LOC-011,"Demo Address 47, Rushikonda",17.781397,83.385568,Visakhapatnam,Andhra Pradesh,India,MERCHANT-DEMO-001
+CUST-0048,Neha Patel,DEMO-CUSTOMER-0048,hi,LOC-005,"Demo Address 48, Seethammadhara",17.740862,83.30638,Visakhapatnam,Andhra Pradesh,India,MERCHANT-DEMO-001
+CUST-0049,Kavya Singh,DEMO-CUSTOMER-0049,te,LOC-006,"Demo Address 49, Gajuwaka",17.684273,83.211364,Visakhapatnam,Andhra Pradesh,India,MERCHANT-DEMO-001
+CUST-0050,Ramesh Reddy,DEMO-CUSTOMER-0050,te,LOC-001,"Demo Address 50, MVP Colony",17.741361,83.338439,Visakhapatnam,Andhra Pradesh,India,MERCHANT-DEMO-001
+CUST-0051,Arjun Patel,DEMO-CUSTOMER-0051,te,LOC-003,"Demo Address 51, Dwaraka Nagar",17.729789,83.300607,Visakhapatnam,Andhra Pradesh,India,MERCHANT-DEMO-001
+CUST-0052,Neha Verma,DEMO-CUSTOMER-0052,te,LOC-006,"Demo Address 52, Gajuwaka",17.684298,83.21115,Visakhapatnam,Andhra Pradesh,India,MERCHANT-DEMO-001
+CUST-0053,Neha Reddy,DEMO-CUSTOMER-0053,te,LOC-007,"Demo Address 53, NAD Junction",17.743611,83.252239,Visakhapatnam,Andhra Pradesh,India,MERCHANT-DEMO-001
+CUST-0054,Arjun Rao,DEMO-CUSTOMER-0054,te,LOC-007,"Demo Address 54, NAD Junction",17.744218,83.25321,Visakhapatnam,Andhra Pradesh,India,MERCHANT-DEMO-001
+CUST-0055,Lakshmi Naidu,DEMO-CUSTOMER-0055,hi,LOC-002,"Demo Address 55, Siripuram",17.722647,83.314643,Visakhapatnam,Andhra Pradesh,India,MERCHANT-DEMO-001
+CUST-0056,Arjun Verma,DEMO-CUSTOMER-0056,te,LOC-009,"Demo Address 56, Akkayyapalem",17.730587,83.291886,Visakhapatnam,Andhra Pradesh,India,MERCHANT-DEMO-001
+CUST-0057,Manoj Kumar,DEMO-CUSTOMER-0057,hi,LOC-009,"Demo Address 57, Akkayyapalem",17.731146,83.291994,Visakhapatnam,Andhra Pradesh,India,MERCHANT-DEMO-001
+CUST-0058,Vijay Rao,DEMO-CUSTOMER-0058,te,LOC-002,"Demo Address 58, Siripuram",17.724445,83.313798,Visakhapatnam,Andhra Pradesh,India,MERCHANT-DEMO-001
+CUST-0059,Manoj Sharma,DEMO-CUSTOMER-0059,hi,LOC-012,"Demo Address 59, Madhurawada",17.800853,83.353504,Visakhapatnam,Andhra Pradesh,India,MERCHANT-DEMO-001
+CUST-0060,Vijay Verma,DEMO-CUSTOMER-0060,hi,LOC-009,"Demo Address 60, Akkayyapalem",17.732648,83.289861,Visakhapatnam,Andhra Pradesh,India,MERCHANT-DEMO-001
+CUST-0061,Arjun Verma,DEMO-CUSTOMER-0061,te,LOC-006,"Demo Address 61, Gajuwaka",17.684162,83.208633,Visakhapatnam,Andhra Pradesh,India,MERCHANT-DEMO-001
+CUST-0062,Swathi Naidu,DEMO-CUSTOMER-0062,hi,LOC-003,"Demo Address 62, Dwaraka Nagar",17.729537,83.298759,Visakhapatnam,Andhra Pradesh,India,MERCHANT-DEMO-001
+CUST-0063,Lakshmi Patel,DEMO-CUSTOMER-0063,hi,LOC-012,"Demo Address 63, Madhurawada",17.801332,83.353717,Visakhapatnam,Andhra Pradesh,India,MERCHANT-DEMO-001
+CUST-0064,Swathi Verma,DEMO-CUSTOMER-0064,hi,LOC-001,"Demo Address 64, MVP Colony",17.742389,83.337829,Visakhapatnam,Andhra Pradesh,India,MERCHANT-DEMO-001
+CUST-0065,Sita Reddy,DEMO-CUSTOMER-0065,hi,LOC-002,"Demo Address 65, Siripuram",17.721819,83.313725,Visakhapatnam,Andhra Pradesh,India,MERCHANT-DEMO-001
+CUST-0066,Arjun Patel,DEMO-CUSTOMER-0066,te,LOC-006,"Demo Address 66, Gajuwaka",17.686221,83.209012,Visakhapatnam,Andhra Pradesh,India,MERCHANT-DEMO-001
+CUST-0067,Vijay Yadav,DEMO-CUSTOMER-0067,te,LOC-009,"Demo Address 67, Akkayyapalem",17.730595,83.28979,Visakhapatnam,Andhra Pradesh,India,MERCHANT-DEMO-001
+CUST-0068,Pooja Verma,DEMO-CUSTOMER-0068,te,LOC-004,"Demo Address 68, Maddilapalem",17.734977,83.320309,Visakhapatnam,Andhra Pradesh,India,MERCHANT-DEMO-001
+CUST-0069,Kiran Sharma,DEMO-CUSTOMER-0069,hi,LOC-007,"Demo Address 69, NAD Junction",17.742663,83.252138,Visakhapatnam,Andhra Pradesh,India,MERCHANT-DEMO-001
+CUST-0070,Anjali Yadav,DEMO-CUSTOMER-0070,te,LOC-008,"Demo Address 70, Beach Road",17.717881,83.333333,Visakhapatnam,Andhra Pradesh,India,MERCHANT-DEMO-001
+CUST-0071,Kavya Singh,DEMO-CUSTOMER-0071,hi,LOC-005,"Demo Address 71, Seethammadhara",17.74267,83.305314,Visakhapatnam,Andhra Pradesh,India,MERCHANT-DEMO-001
+CUST-0072,Vijay Prasad,DEMO-CUSTOMER-0072,te,LOC-006,"Demo Address 72, Gajuwaka",17.685768,83.20888,Visakhapatnam,Andhra Pradesh,India,MERCHANT-DEMO-001
+CUST-0073,Rohit Naidu,DEMO-CUSTOMER-0073,te,LOC-004,"Demo Address 73, Maddilapalem",17.7352,83.31992,Visakhapatnam,Andhra Pradesh,India,MERCHANT-DEMO-001
+CUST-0074,Srinivas Kumar,DEMO-CUSTOMER-0074,hi,LOC-009,"Demo Address 74, Akkayyapalem",17.73285,83.289534,Visakhapatnam,Andhra Pradesh,India,MERCHANT-DEMO-001
+CUST-0075,Swathi Reddy,DEMO-CUSTOMER-0075,hi,LOC-004,"Demo Address 75, Maddilapalem",17.734945,83.319628,Visakhapatnam,Andhra Pradesh,India,MERCHANT-DEMO-001
+CUST-0076,Akhil Singh,DEMO-CUSTOMER-0076,te,LOC-009,"Demo Address 76, Akkayyapalem",17.731777,83.291085,Visakhapatnam,Andhra Pradesh,India,MERCHANT-DEMO-001
+CUST-0077,Priya Kumar,DEMO-CUSTOMER-0077,hi,LOC-007,"Demo Address 77, NAD Junction",17.744471,83.25224,Visakhapatnam,Andhra Pradesh,India,MERCHANT-DEMO-001
+CUST-0078,Divya Sharma,DEMO-CUSTOMER-0078,te,LOC-009,"Demo Address 78, Akkayyapalem",17.733434,83.292163,Visakhapatnam,Andhra Pradesh,India,MERCHANT-DEMO-001
+CUST-0079,Srinivas Kumar,DEMO-CUSTOMER-0079,hi,LOC-012,"Demo Address 79, Madhurawada",17.802411,83.3535,Visakhapatnam,Andhra Pradesh,India,MERCHANT-DEMO-001
+CUST-0080,Arjun Yadav,DEMO-CUSTOMER-0080,te,LOC-002,"Demo Address 80, Siripuram",17.72245,83.315237,Visakhapatnam,Andhra Pradesh,India,MERCHANT-DEMO-001
+CUST-0081,Lakshmi Prasad,DEMO-CUSTOMER-0081,hi,LOC-003,"Demo Address 81, Dwaraka Nagar",17.728747,83.298763,Visakhapatnam,Andhra Pradesh,India,MERCHANT-DEMO-001
+CUST-0082,Kiran Sharma,DEMO-CUSTOMER-0082,te,LOC-010,"Demo Address 82, PM Palem",17.786117,83.350981,Visakhapatnam,Andhra Pradesh,India,MERCHANT-DEMO-001
+CUST-0083,Rahul Singh,DEMO-CUSTOMER-0083,te,LOC-004,"Demo Address 83, Maddilapalem",17.733555,83.318491,Visakhapatnam,Andhra Pradesh,India,MERCHANT-DEMO-001
+CUST-0084,Lakshmi Sharma,DEMO-CUSTOMER-0084,te,LOC-012,"Demo Address 84, Madhurawada",17.799741,83.355012,Visakhapatnam,Andhra Pradesh,India,MERCHANT-DEMO-001
+CUST-0085,Ramesh Singh,DEMO-CUSTOMER-0085,te,LOC-011,"Demo Address 85, Rushikonda",17.780771,83.385543,Visakhapatnam,Andhra Pradesh,India,MERCHANT-DEMO-001
+CUST-0086,Arjun Singh,DEMO-CUSTOMER-0086,hi,LOC-012,"Demo Address 86, Madhurawada",17.799546,83.353739,Visakhapatnam,Andhra Pradesh,India,MERCHANT-DEMO-001
+CUST-0087,Akhil Yadav,DEMO-CUSTOMER-0087,hi,LOC-006,"Demo Address 87, Gajuwaka",17.684675,83.210862,Visakhapatnam,Andhra Pradesh,India,MERCHANT-DEMO-001
+CUST-0088,Swathi Rao,DEMO-CUSTOMER-0088,hi,LOC-010,"Demo Address 88, PM Palem",17.784114,83.350163,Visakhapatnam,Andhra Pradesh,India,MERCHANT-DEMO-001
+CUST-0089,Rohit Patel,DEMO-CUSTOMER-0089,te,LOC-006,"Demo Address 89, Gajuwaka",17.685017,83.208899,Visakhapatnam,Andhra Pradesh,India,MERCHANT-DEMO-001
+CUST-0090,Akhil Prasad,DEMO-CUSTOMER-0090,hi,LOC-012,"Demo Address 90, Madhurawada",17.80188,83.355663,Visakhapatnam,Andhra Pradesh,India,MERCHANT-DEMO-001
+CUST-0091,Swathi Yadav,DEMO-CUSTOMER-0091,hi,LOC-004,"Demo Address 91, Maddilapalem",17.734269,83.318865,Visakhapatnam,Andhra Pradesh,India,MERCHANT-DEMO-001
+CUST-0092,Anusha Yadav,DEMO-CUSTOMER-0092,te,LOC-003,"Demo Address 92, Dwaraka Nagar",17.728403,83.298575,Visakhapatnam,Andhra Pradesh,India,MERCHANT-DEMO-001
+CUST-0093,Vijay Kumar,DEMO-CUSTOMER-0093,hi,LOC-002,"Demo Address 93, Siripuram",17.722216,83.31515,Visakhapatnam,Andhra Pradesh,India,MERCHANT-DEMO-001
+CUST-0094,Meena Patel,DEMO-CUSTOMER-0094,hi,LOC-007,"Demo Address 94, NAD Junction",17.74485,83.252006,Visakhapatnam,Andhra Pradesh,India,MERCHANT-DEMO-001
+CUST-0095,Rahul Naidu,DEMO-CUSTOMER-0095,hi,LOC-007,"Demo Address 95, NAD Junction",17.743238,83.251267,Visakhapatnam,Andhra Pradesh,India,MERCHANT-DEMO-001
+CUST-0096,Vijay Verma,DEMO-CUSTOMER-0096,te,LOC-010,"Demo Address 96, PM Palem",17.785125,83.350261,Visakhapatnam,Andhra Pradesh,India,MERCHANT-DEMO-001
+CUST-0097,Kiran Sharma,DEMO-CUSTOMER-0097,te,LOC-003,"Demo Address 97, Dwaraka Nagar",17.72888,83.30092,Visakhapatnam,Andhra Pradesh,India,MERCHANT-DEMO-001
+CUST-0098,Anusha Verma,DEMO-CUSTOMER-0098,hi,LOC-012,"Demo Address 98, Madhurawada",17.802111,83.355658,Visakhapatnam,Andhra Pradesh,India,MERCHANT-DEMO-001
+CUST-0099,Meena Naidu,DEMO-CUSTOMER-0099,hi,LOC-011,"Demo Address 99, Rushikonda",17.782999,83.383722,Visakhapatnam,Andhra Pradesh,India,MERCHANT-DEMO-001
+CUST-0100,Swathi Sharma,DEMO-CUSTOMER-0100,hi,LOC-012,"Demo Address 100, Madhurawada",17.801541,83.354022,Visakhapatnam,Andhra Pradesh,India,MERCHANT-DEMO-001

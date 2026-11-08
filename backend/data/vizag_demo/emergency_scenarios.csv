@@ -1,0 +1,2 @@
+scenario_id,failed_driver_id,emergency_type,emergency_status,breakdown_latitude,breakdown_longitude,pending_shipment_ids,pending_parcel_count,suggested_driver_1,suggested_driver_2,driver_1_target_shipment,driver_2_target_shipment,initial_language,driver_1_switch_language,driver_2_language,requires_driver_acceptance,requires_handover_verification,requires_dispatcher_approval,merchant_id
+EMG-VZG-001,DRV-001,vehicle_breakdown,reported,17.735,83.319,SHP-0001|SHP-0002,2,DRV-002,DRV-003,SHP-0001,SHP-0002,hi,te,hi,True,True,True,MERCHANT-DEMO-001
