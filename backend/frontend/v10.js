@@ -96,8 +96,8 @@
           });
         }
         // V13: backend ensures the synthetic/real manifest exists; never overwrite it from the browser.
-        const manifest=await req('/api/v11/manifest');
-        console.info('ResQ parcel manifest loaded:',manifest.parcels.length,'parcels');
+        const manifest=await req('/api/v11/context');
+        console.info('ResQ public parcel context loaded:',manifest.parcels.length,'parcels (addresses withheld)');
         renderFlow();await begin('Suresh');
       }catch(error){status(`Incident error: ${error.message}`);button.disabled=false;}
     };
@@ -191,7 +191,7 @@
         if(token!==callGeneration)return;
         line('AI',result.reply);
         await sleep(2000);await speak(result.reply,result.language);
-        if(result.end_call){await finish(true);return;}
+        if(result.end_call){await finish(result.call_completed === true);return;}
         await sleep(2000);
       }
     }catch(error){

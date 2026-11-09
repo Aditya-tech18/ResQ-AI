@@ -193,3 +193,40 @@ __pycache__/
 *.sqlite3
 backups/
 .DS_Store
+
+# Secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+credentials.json
+
+# Environments
+.venv/
+venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Local data
+*.db
+*.sqlite
+*.sqlite3
+*.log
+
+# Old backups
+resq_upgrade_backups/
+**/resq_upgrade_backups/
+backend/backups/
+*.backup_*
+*.pre_v*
+*.pre_resq_*
+*.slot_backup
+index_backup_*.html
+index.before_phone_restore_*.html
+
+# System
+.DS_Store
+__MACOSX/
+node_modules/

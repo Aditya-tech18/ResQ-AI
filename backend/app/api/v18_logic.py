@@ -31,6 +31,8 @@ def save(call_id, actor, inc, facts, stage, *, ended=False):
         'awaiting_permission' if stage == 'consent' else 'in_progress')}
     if route:
         payload['next_route'] = ' · '.join(route)
+    elif facts.get('destination'):
+        payload['next_route'] = facts['destination']
     if isinstance(ids, list):
         payload['parcel_ids'] = ids
     if facts.get('eta_minutes') is not None:
@@ -43,24 +45,40 @@ def save(call_id, actor, inc, facts, stage, *, ended=False):
 
 
 def extract_eta(text):
-    s = text.casefold().replace('०','0').replace('१','1').replace('२','2').replace('३','3').replace('४','4').replace('५','5').replace('६','6').replace('७','7').replace('८','8').replace('९','9')
-    # Avoid interpreting an address number as ETA; require time context.
-    m = re.search(r'\b(\d{1,3})\s*(?:min(?:ute)?s?|मिनट|నిమిషా(?:లు)?|minutes?)\b',s)
+    """Conservative ETA parsing; do not infer minutes from a street or parcel number."""
+    s = text.casefold().translate(str.maketrans('०१२३४५६७८९', '0123456789'))
+    s = s.translate(str.maketrans('౦౧౨౩౪౫౬౭౮౯', '0123456789'))
+    m = re.search(r'(?<!\w)(\d{1,3})\s*(?:minutes?|mins?|मिनट|నిమిష(?:ాలు|లు)?)(?!\w)', s)
     if m:
-        n=int(m.group(1))
+        n = int(m.group(1))
         return n if 1 <= n <= 240 else None
-    words={'एक':1,'दो':2,'तीन':3,'चार':4,'पांच':5,'पाँच':5,'छह':6,'सात':7,'आठ':8,'नौ':9,'दस':10,'पंद्रह':15,'बीस':20,'five':5,'ten':10,'eight':8,'fifteen':15,'twenty':20}
-    if any(w in s for w in ('मिनट','minute','min ','నిమిష')):
-        for word,n in words.items():
-            if word in s: return n
+    # Whole-word matches avoid extracting 'one' from 'someone'.
+    words = {'एक':1,'दो':2,'तीन':3,'चार':4,'पांच':5,'पाँच':5,'छह':6,'सात':7,'आठ':8,'नौ':9,'दस':10,'पंद्रह':15,'बीस':20,
+             'ఒక':1,'రెండు':2,'మూడు':3,'నాలుగు':4,'ఐదు':5,'ఆరు':6,'ఏడు':7,'ఎనిమిది':8,'తొమ్మిది':9,'పది':10,
+             'one':1,'two':2,'three':3,'four':4,'five':5,'six':6,'seven':7,'eight':8,'nine':9,'ten':10,'fifteen':15,'twenty':20}
+    if re.search(r'minute|min\b|मिनट|నిమిష', s):
+        for word,n in sorted(words.items(),key=lambda item:-len(item[0])):
+            if re.search(r'(?<!\w)'+re.escape(word)+r'(?!\w)',s):return n
     return None
 
 
 def consent_yes(text):
-    s=text.casefold().strip()
-    if any(w in s for w in ('नहीं','नही','मत','रुको','रुकिए','wait','no ','not ','వద్దు')):return False
-    return any(w in s for w in ('हाँ','हां','जी हाँ','बिल्कुल','बिलकुल','ठीक है','कर दीजिए','काट दीजिए','yes','okay','ok','sure','అవును','సరే','చేయండి'))
+    """Only explicit permission; ambiguous acknowledgement never ends a call."""
+    s = re.sub(r'\s+', ' ', text.casefold().strip())
+    # Any qualification or negation vetoes an otherwise positive utterance.
+    veto = ('नहीं','नही','मत','रुको','रुकिए','लेकिन','पर रु','अभी नहीं',
+            'wait','hold','but','not','no','stop','later','వద్దు','ఆగ','కాదు','కానీ')
+    if any(w in s for w in veto): return False
+    allowed = ('हाँ, कॉल समाप्त कर','हां कॉल समाप्त कर','कॉल समाप्त कर दीजिए',
+               'कॉल काट दीजिए','काट दीजिए','जी हाँ, कॉल','हाँ समाप्त',
+               'yes end the call','yes you may end','you may hang up',
+               'please end the call','end the call','hang up now',
+               'కాల్ ముగించండి','కాల్ కట్ చేయండి','అవును కాల్ ముగించండి')
+    return any(w in s for w in allowed)
 
+
+def reply_in_language(language, hi, en, te):
+    return {'hi':hi,'en':en,'te':te}.get(language,hi)
 
 def willingness(text, proposed):
     s=text.casefold()
@@ -91,23 +109,47 @@ def decide(actor, transcript, facts, new_facts, model_result):
         else:
             result['reply']=f'{actor} जी, क्या आप राजू जी की कुछ डिलीवरी में मदद कर पाएंगे?'
     elif stage == 'route':
-        spoken=v14_nearby.route_from_speech(transcript)
+        spoken=facts.get('_verified_route_localities') or []
+        destination=facts.get('_extracted_destination')
+        if destination:
+            new_facts['destination']=destination
+            new_facts['route_description']=destination
+        if destination and not spoken:
+            result['reply']=reply_in_language(result['language'],
+                f'{actor} जी, आपका गंतव्य {destination} दर्ज है, लेकिन पार्सल स्थान सत्यापित नहीं हैं। कृपया नज़दीकी डिलीवरी क्षेत्र बताइए।',
+                f'{actor}, I recorded {destination}, but parcel locations are not verified for it. Which delivery area is on your route?',
+                f'{actor} గారు, {destination} నమోదు చేశాను. కానీ పార్సెల్ ప్రాంతం ధృవీకరించబడలేదు. మీ మార్గంలో ఉన్న డెలివరీ ప్రాంతం చెప్పండి.')
+        elif not spoken:
+            result['reply']=reply_in_language(result['language'],
+                f'{actor} जी, आप किस जगह जा रहे हैं? कृपया जगह का नाम बताइए।',
+                f'{actor}, which destination are you heading toward? Please tell me the place name.',
+                f'{actor} గారు, మీరు ఏ ప్రాంతానికి వెళ్తున్నారు? ఆ ప్రాంతం పేరు చెప్పండి.')
+
         if spoken:
-            match=v14_nearby.nearby(spoken,radius_km=2.0)
+            # Match by exact pending-manifest locality. This is a locality candidate,
+            # NOT verified proximity or a driving-route claim.
+            from app.api import v11_route
+            ctx = v11_route.context(x_dispatcher_token=None)
+            pending = [p for p in ctx['parcels'] if p['status'] == 'pending']
+            match = {'matched': [{'id':p['id'], 'locality':p['locality']} for p in pending if p['locality'] in spoken],
+                     'route': spoken, 'measurement': 'manifest_locality_match_only'}
             ids=[p['id'] for p in match['matched']]
             new_facts['route_localities']=spoken
             new_facts['route_candidate_ids']=ids
-            new_facts['nearby_radius_km']=2.0
+            new_facts['match_basis']='manifest_locality_match_only'
             if ids:
                 stage='eta'
-                result['reply']=(f'{actor} जी, आपके बताए रास्ते के लगभग 2 किलोमीटर के दायरे में '
-                                 f'राजू जी के {len(ids)} पार्सल मिल रहे हैं। '
-                                 'आप राजू जी के पास कितने मिनट में पहुँच सकते हैं?')
+                result['reply']=reply_in_language(result['language'],
+                    f'{actor} जी, आपके बताए क्षेत्र में {len(ids)} पार्सल दर्ज हैं। यह रूट दूरी की पुष्टि नहीं है। राजू जी के पास कितने मिनट में पहुँचेंगे?',
+                    f'{actor}, {len(ids)} pending parcel(s) are listed in that delivery area. Route distance is not verified. How many minutes until you reach Raju?',
+                    f'{actor} గారు, ఆ డెలివరీ ప్రాంతంలో {len(ids)} పార్సెల్‌లు ఉన్నాయి. రూట్ దూరం నిర్ధారించలేదు. రాజు దగ్గరకు ఎన్ని నిమిషాల్లో చేరుకుంటారు?')
             else:
-                result['reply']=(f'{actor} जी, आपके बताए रास्ते के 2 किलोमीटर के दायरे में '
-                                 'अभी कोई मेल खाता पार्सल नहीं मिला। क्या आप किसी दूसरे रूट पर जा रहे हैं?')
+                result['reply']=reply_in_language(result['language'],
+                    f'{actor} जी, उस क्षेत्र में कोई पेंडिंग पार्सल नहीं मिला। क्या दूसरा डिलीवरी क्षेत्र बताएंगे?',
+                    f'{actor}, no pending parcels are listed in that area. Is there another delivery area on your route?',
+                    f'{actor} గారు, ఆ ప్రాంతంలో పెండింగ్ పార్సెల్‌లు లేవు. మీ మార్గంలో మరొక డెలివరీ ప్రాంతం ఉందా?')
         else:
-            result['reply']=f'{actor} जी, कृपया अपना अगला रूट या लोकेशन बताइए, ताकि मैं पार्सल मिलान कर सकूँ।'
+            pass
     elif stage == 'eta':
         eta=extract_eta(transcript)
         if eta is None:
@@ -116,7 +158,10 @@ def decide(actor, transcript, facts, new_facts, model_result):
             if type(candidate) is int and 1<=candidate<=240 and any(w in transcript.casefold() for w in ('minute','min','मिनट','నిమిష','पहुंच','पहुँच','reach')):
                 eta=candidate
         if eta is None:
-            result['reply']=f'{actor} जी, राजू जी के पास पहुँचने में लगभग कितने मिनट लगेंगे?'
+            result['reply']=reply_in_language(result['language'],
+                f'{actor} जी, राजू जी के पास पहुँचने में लगभग कितने मिनट लगेंगे?',
+                f'{actor}, about how many minutes until you reach Raju?',
+                f'{actor} గారు, రాజు దగ్గరకు చేరుకోవడానికి ఎన్ని నిమిషాలు పడుతుంది?')
         else:
             new_facts['eta_minutes']=eta
             stage='consent'

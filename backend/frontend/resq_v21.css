@@ -1,0 +1,31 @@
+/* V21 reference-aligned refinements. Existing app remains the source of truth. */
+:root{--resq-red:#ec0010;--resq-ink:#0c1423;--resq-line:#e5e9f0}
+body{background:radial-gradient(ellipse at 100% 35%,#fff1f3 0%,transparent 28%),#fafbfd!important}
+.resq19-hero{max-width:none!important;margin:14px 0 20px!important;padding:31px 40px 23px!important;min-height:385px!important;border:1px solid #e9edf2!important;border-radius:24px!important;box-shadow:0 10px 30px #1820330a!important}
+.resq19-hero:before{width:650px!important;height:650px!important;top:-230px!important;right:-80px!important;border-color:#ffe8eb!important}
+.resq19-hero:after{width:490px!important;height:490px!important;top:-150px!important;right:-4px!important;border-color:#ffebed!important}
+.resq19-kicker{font-size:12px!important;font-weight:850!important;letter-spacing:.02em!important}
+.resq19-kicker span{font-size:12px!important;margin-left:15px!important;color:#667387!important}
+.resq19-actions{gap:19px!important}.resq19-pill{border-radius:50px!important;padding:12px 23px!important;font-size:14px!important;box-shadow:0 1px 2px #1112!important}.resq19-reset{padding:13px 25px!important;border-radius:13px!important;font-size:15px!important}
+.resq19-main{min-height:255px!important;align-items:flex-start!important}.resq19-main h1{font-size:clamp(39px,4.15vw,82px)!important;line-height:1.04!important;margin:45px 0 23px!important;letter-spacing:-.052em!important;font-weight:900!important}.resq19-sub{font-size:22px!important;font-weight:750!important}
+.resq19-route{position:absolute!important;right:2%!important;top:54px!important;width:340px!important;height:205px!important;z-index:0!important;opacity:.9!important}
+#resq20-truck{right:5%!important;top:58%!important;width:130px!important;height:66px!important}
+.resq19-steps{gap:12px!important}.resq19-step{position:relative;border-radius:50px!important;min-height:68px!important;padding:12px 15px!important;box-shadow:0 1px 3px #0c152508!important}.resq19-step strong{font-size:15px!important;font-weight:850!important}.resq19-step small{font-size:12px!important;margin-top:3px!important}.resq19-num{width:42px!important;height:42px!important;font-size:18px!important}
+.resq19-layout{grid-template-columns:minmax(0,1.75fr) minmax(360px,.9fr)!important;gap:25px!important;align-items:start!important}.resq19-left{gap:16px!important}.resq19-left>.resq19-card{border-radius:19px!important;border:1px solid #e2e7ee!important;box-shadow:0 4px 16px #14203909!important}.resq19-right{top:14px!important}
+/* compact incident + map resembling the approved reference */
+.resq19-left>.resq19-card:first-child{padding:15px 18px!important}
+.resq19-left>.resq19-card:nth-child(2){padding:15px!important}
+.resq19-left>.resq19-card:nth-child(2) h3{font-size:17px!important;font-weight:850!important}
+.resq19-left>.resq19-card:nth-child(2) .h-\[320px\]{height:310px!important;border-radius:12px!important}
+.resq19-left>.resq19-card:nth-child(2) svg{filter:saturate(.78)}
+.resq19-left>.resq19-card:nth-child(3){padding:20px!important}
+/* phone casing / real UI stays interactive */
+.resq19-right .max-w-\[340px\]{max-width:410px!important;border-radius:49px!important;padding:12px!important;background:#101217!important;box-shadow:0 25px 52px #10182738,0 0 0 2px #343943!important}
+.resq19-right .h-\[600px\]{height:750px!important;border-radius:37px!important}
+.resq19-right .resq20-mobile-title{font-size:clamp(24px,2.4vw,37px)!important;line-height:1.08!important}
+.resq20-call-banner{padding:29px 18px 20px!important;background:radial-gradient(ellipse at 90% 25%,#a52032 0,transparent 55%),linear-gradient(125deg,#101827,#27111d 65%,#5d1627)!important}
+.resq20-call-banner h2{font-size:36px!important}.resq20-call-banner p{font-size:13px!important}.resq20-call-banner .resq20-person{font-size:28px!important}.resq20-call-banner .resq20-timer{font-size:24px!important}
+.resq21-flowline{display:flex;align-items:center;justify-content:space-around;gap:5px;padding:12px 7px;border:1px solid #ffd3d9;background:#fff6f7;border-radius:16px;margin:12px 10px 15px;font-size:10px;font-weight:800;color:#111827}.resq21-flowline span{display:grid;gap:6px;text-align:center}.resq21-flowline b{color:#e80013;font-size:20px}.resq21-flowline i{font-style:normal;color:#fa7d8b}
+.resq21-portrait{width:45px;height:45px;object-fit:cover;border-radius:50%;border:2px solid #fff;box-shadow:0 2px 9px #15213720}
+@media(max-width:1100px){.resq19-layout{grid-template-columns:1fr!important}.resq19-right{position:relative!important;max-width:470px!important;margin:auto!important}.resq19-main h1{font-size:clamp(36px,5vw,60px)!important}.resq19-route{opacity:.3!important}}
+@media(max-width:680px){.resq19-hero{padding:19px!important;min-height:0!important}.resq19-main{min-height:190px!important}.resq19-main h1{font-size:35px!important;margin:30px 0 12px!important}.resq19-sub{font-size:16px!important}.resq19-route{display:none!important}.resq19-kicker span{margin-left:0!important}.resq19-steps{display:flex!important;overflow:auto!important}.resq19-step{min-width:150px!important;min-height:55px!important}.resq19-step strong{font-size:12px!important}.resq19-step small{font-size:10px!important}}

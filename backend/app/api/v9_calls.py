@@ -12,7 +12,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 import httpx
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Header
 from app.api import v11_route as routes
 from app.api import v14_nearby as nearby
 from pydantic import BaseModel, Field
@@ -153,7 +153,7 @@ async def _resq_original_ask_gemini(actor, transcript, history, facts, inc, dete
     manifest = None
     if not is_raju:
         try:
-            manifest = routes.context()
+            manifest = routes.context(x_dispatcher_token=None)
         except HTTPException:
             manifest = None
     prompt = (
@@ -215,7 +215,7 @@ def _resq_demo_fallback(actor, transcript, facts, inc, detected_language):
     """Limited, explicitly labelled fallback; no invented parcel counts or addresses."""
     t = transcript.casefold().strip()
     # Return a safe clarification for unknown intents rather than inventing facts.
-    lang = 'te' if detected_language == 'te' else 'en' if detected_language == 'en' else 'hi'
+    lang = __import__('app.api.resq_multilingual',fromlist=['detect_language']).detect_language(transcript, detected_language)
     if actor == 'Raju':
         missing=[k for k in ('location','issue','parcels') if not (facts.get(k) or inc.get(k))]
         if missing:
@@ -283,8 +283,17 @@ def sanitize_facts(actor, old, proposed):
     return out
 
 
+def _is_repeat_request(text: str) -> bool:
+    t = text.casefold().strip()
+    return any(x in t for x in (
+        'फिर से पूछो','दोबारा पूछ','फिर से बोल','दोबारा बोल',
+        'repeat that','say that again','repeat please',
+        'మళ్ళీ చెప్ప','మళ్లీ చెప్ప','మళ్ళీ అడుగు',
+    ))
+
+
 @router.post("/calls/{call_id}/turn")
-async def turn(call_id: int, body: Turn):
+async def turn(call_id: int, body: Turn, x_driver_token: str | None = Header(default=None)):
     from app.api import v18_logic
     with connect() as db:
         row = db.execute("SELECT * FROM calls WHERE id=?", (call_id,)).fetchone()
@@ -295,12 +304,171 @@ async def turn(call_id: int, body: Turn):
         facts = json.loads(row["facts"])
         inc = incident(db)
 
+    # Call-control intent has priority over Q&A and scripted route/ETA stages.
+    # Only the driver's current utterance can authorize hanging up.
+    from app.api import resq_call_control
+    control = await resq_call_control.classify_end_request(body.transcript, body.detected_language)
+    if control['end_call']:
+        from app.api import resq_multilingual
+        language = resq_multilingual.detect_language(body.transcript, body.detected_language)
+        completed = (actor == 'Raju' and all(facts.get(k) is not None or inc.get(k) is not None
+                                             for k in ('location', 'issue', 'parcels'))) or (
+                     actor != 'Raju' and facts.get('_v18_stage') == 'consent'
+                     and facts.get('accepted') is True and bool(facts.get('route_candidate_ids'))
+                     and facts.get('eta_minutes') is not None)
+        status = 'completed' if completed else 'incomplete'
+        reply = resq_call_control.goodbye(actor, language)
+        history.extend([{'role':'driver','text':body.transcript}, {'role':'AI','text':reply}])
+        with connect() as db:
+            current = db.execute('SELECT status FROM calls WHERE id=?',(call_id,)).fetchone()
+            if not current or current['status'] != 'active':
+                raise HTTPException(409, 'Call ended while processing')
+            db.execute('UPDATE calls SET turns=?,facts=?,status=?,ended_at=? WHERE id=?',
+                       (json.dumps(history,ensure_ascii=False),json.dumps(facts,ensure_ascii=False),
+                        status,utcnow(),call_id))
+            if completed and actor == 'Raju':
+                db.execute('UPDATE incidents SET location=?,issue=?,parcels=?,status=? WHERE id=1',
+                           (facts.get('location') or inc.get('location'),
+                            facts.get('issue') or inc.get('issue'),
+                            facts.get('parcels') or inc.get('parcels'),'awaiting_rescue'))
+            db.commit()
+        return {'reply':reply,'language':language,'facts':facts,
+                'ready_to_close':True,'end_call':True,'call_completed':completed,
+                'provider':control['provider'],'route_match':None,
+                'report':state() if completed else None}
+
+    # RESQ_FINAL_CALL_FLOW: single coordinator, persist facts BEFORE completion.
+    if actor != 'Raju':
+        from app.api import resq_final_flow
+        from app.api import v18_logic
+        manifest = routes.context(x_dispatcher_token=None)
+        pending = [p for p in manifest.get('parcels', []) if p.get('status') == 'pending']
+        answer = resq_final_flow.process(actor, body.transcript, facts, inc, pending, body.detected_language)
+        new_facts = answer['facts']
+        ended = answer['end_call']
+        completed = answer['complete']
+        stage = answer['stage']
+        history.extend([{'role':'driver','text':body.transcript},
+                        {'role':'AI','text':answer['reply']}])
+        # Report must contain ETA AND permission before 'completed' is requested.
+        # An error here must not leave the call incorrectly marked completed.
+        v18_logic.save(call_id, actor, inc, new_facts,
+                       'consent' if stage == 'consent' else stage, ended=completed)
+        with connect() as db:
+            current = db.execute('SELECT status FROM calls WHERE id=?',(call_id,)).fetchone()
+            if not current or current['status'] != 'active':
+                raise HTTPException(409, 'Call ended while processing')
+            db.execute('UPDATE calls SET turns=?,facts=?,status=?,ended_at=? WHERE id=?',
+                       (json.dumps(history,ensure_ascii=False),
+                        json.dumps(new_facts,ensure_ascii=False),
+                        'completed' if completed else ('declined' if ended else 'active'),
+                        utcnow() if ended else None,call_id))
+            db.commit()
+        return {'reply':answer['reply'],'language':answer['language'],
+                'facts':new_facts,'ready_to_close':ended,'end_call':ended,
+                'call_completed':completed,'provider':'resq_final_state_coordinator',
+                'route_match':{'matched_ids':new_facts.get('route_candidate_ids',[]),
+                               'measurement':'manifest_locality_match_only'},
+                'report':state() if ended else None}
+
+    # RESQ_V22_CONTEXT_ROUTE_FIX: extract and persist a driver's route BEFORE answering
+    # an incidental question. A turn can contain BOTH a route fact and a question.
+    from app.api import resq_multilingual
+    lang = resq_multilingual.detect_language(body.transcript, body.detected_language)
+    stage = facts.get('_v18_stage', 'willingness')
+    route_extracted_this_turn = False
+    if actor != 'Raju' and stage in ('willingness', 'route'):
+        try:
+            manifest = routes.context(x_dispatcher_token=None)
+            localities = [p['locality'] for p in manifest['parcels'] if p['status'] == 'pending']
+        except HTTPException:
+            localities = []
+        extraction = await resq_multilingual.extract_route(body.transcript, localities, body.detected_language)
+        matched = resq_multilingual.grounded_manifest_matches(extraction, localities)
+        if extraction.destination:
+            facts['_extracted_destination'] = extraction.destination
+            facts['_extraction_evidence'] = extraction.evidence
+            facts['_verified_route_localities'] = matched
+            facts['_language'] = lang
+            route_extracted_this_turn = True
+        # A question should not erase a previously spoken, verified route.
+        # Do not re-use a stale route if the driver explicitly changes destination.
+
+    # Repetition request: replay the latest AI utterance in the driver's current
+    # language where possible, without resetting collected route/ETA facts.
+    if actor != 'Raju' and _is_repeat_request(body.transcript):
+        last = next((t.get('text','') for t in reversed(history) if t.get('role')=='AI'), '')
+        previous_lang = facts.get('_language')
+        if previous_lang and previous_lang != lang:
+            from app.api.v18_logic import reply_in_language
+            if stage == 'eta':
+                reply = reply_in_language(lang,
+                    f'{actor} जी, राजू जी के पास पहुँचने में लगभग कितने मिनट लगेंगे?',
+                    f'{actor}, about how many minutes until you reach Raju?',
+                    f'{actor} గారు, రాజు దగ్గరకు చేరుకోవడానికి ఎన్ని నిమిషాలు పడుతుంది?')
+            elif stage == 'route':
+                reply = reply_in_language(lang,
+                    f'{actor} जी, आप किस डिलीवरी क्षेत्र की तरफ जा रहे हैं?',
+                    f'{actor}, which delivery area are you heading toward?',
+                    f'{actor} గారు, మీరు ఏ డెలివరీ ప్రాంతానికి వెళ్తున్నారు?')
+            else:
+                reply = last
+        else:
+            reply = last
+        reply = reply or {'hi':'मैं आपकी बात सुन रही हूँ।','te':'నేను వింటున్నాను.',
+                          'en':'I am listening.'}.get(lang, 'I am listening.')
+        facts['_language'] = lang
+        history.extend([{'role':'driver','text':body.transcript}, {'role':'AI','text':reply}])
+        with connect() as db:
+            db.execute('UPDATE calls SET turns=? WHERE id=?',
+                       (json.dumps(history,ensure_ascii=False),call_id))
+            db.commit()
+        return {'reply':reply,'language':lang,'facts':facts,'ready_to_close':False,
+                'end_call':False,'provider':'repeat_last_prompt','route_match':None,'report':None}
+
+    if actor != 'Raju':
+        from app.api import resq_conversation
+        question = await resq_conversation.answer_question(
+            actor, body.transcript, history, facts, inc, lang, x_driver_token)
+        if question is not None:
+            response, remembered = question
+            # Persist the route collected from this SAME utterance, then move the
+            # workflow forward. Do not force the driver to repeat the destination.
+            remembered.update({k: facts[k] for k in (
+                '_extracted_destination', '_extraction_evidence',
+                '_verified_route_localities', '_language') if k in facts})
+            if stage == 'route' and remembered.get('_verified_route_localities'):
+                flow_result = {'reply':'', 'language':lang, 'facts':{}, 'end_call':False}
+                flow_result, remembered, route_match, _, next_stage = v18_logic.decide(
+                    actor, body.transcript, facts, remembered, flow_result)
+                # Answer the actual question first, then ask for the next missing fact.
+                reply = (response['reply'].strip() + ' ' + flow_result['reply'].strip())[:700]
+                v18_logic.save(call_id, actor, inc, remembered, next_stage)
+            else:
+                reply = response['reply'][:700]
+            history.extend([{'role':'driver','text':body.transcript}, {'role':'AI','text':reply}])
+            with connect() as db:
+                current = db.execute('SELECT status FROM calls WHERE id=?', (call_id,)).fetchone()
+                if not current or current['status'] != 'active':
+                    raise HTTPException(409, 'Call ended while processing')
+                db.execute('UPDATE calls SET turns=?,facts=? WHERE id=?',
+                           (json.dumps(history,ensure_ascii=False),
+                            json.dumps(remembered,ensure_ascii=False),call_id))
+                db.commit()
+            return {'reply':reply,'language':lang,'facts':remembered,
+                    'ready_to_close':False,'end_call':False,'provider':'context_aware_question',
+                    'route_match':None,'report':None}
+
     # Deterministic, fast control for already established helper call stages.
     # Gemini remains responsible for conversational understanding at willingness stage
     # and for the Raju report, but may be unavailable; V15 fallback is preserved.
     stage = facts.get('_v18_stage', 'willingness')
+    if actor != 'Raju' and stage == 'route':
+        # Route was extracted before question handling. Keep it across turns.
+        facts['_language'] = lang
+
     if actor != 'Raju' and stage in ('route', 'eta', 'consent'):
-        result = {'reply': '', 'language': 'hi', 'facts': {}, 'end_call': False}
+        result = {'reply': '', 'language': facts.get('_language','hi'), 'facts': {}, 'end_call': False}
         new_facts = dict(facts)
         provider = 'deterministic_route_eta_consent'
     else:
@@ -312,6 +480,11 @@ async def turn(call_id: int, body: Turn):
     if actor != 'Raju':
         result, new_facts, route_result, end_call, stage = v18_logic.decide(
             actor, body.transcript, facts, new_facts, result)
+        # If willingness and route were supplied together, process both in one turn.
+        if stage == 'route' and facts.get('_verified_route_localities') and facts.get('_v18_stage','willingness') == 'willingness':
+            result, new_facts, route_result, end_call, stage = v18_logic.decide(
+                actor, body.transcript, {**facts, '_v18_stage':'route'}, new_facts,
+                {'reply':'', 'language':lang, 'facts':{}, 'end_call':False})
         # Persist report before responding; dashboard polls this SQLite record.
         v18_logic.save(call_id, actor, inc, new_facts, stage, ended=end_call and stage=='completed')
         ready = bool(end_call)

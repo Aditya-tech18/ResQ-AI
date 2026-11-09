@@ -22,12 +22,12 @@ DEMO_PARCELS = {
  "P005": (17.7318, 83.2956), "P006": (17.7465, 83.2236),
 }
 ALIASES={
- "mvp colony": ("mvp colony","mvp","एमवीपी कॉलोनी","एम वी पी कॉलोनी"),
- "dwaraka nagar": ("dwaraka nagar","dwarka nagar","द्वारका नगर"),
- "seethammadhara": ("seethammadhara","सीतम्मधारा"),
- "nad junction": ("nad junction","एनएडी जंक्शन"),
- "akkayyapalem": ("akkayyapalem","अक्कय्यापालेम"),
- "gopalapatnam": ("gopalapatnam","gopal pattnam","gopal patnam","गोपालपट्टनम"),
+ "mvp colony": ("mvp colony","mvp","ఎంవీపీ కాలనీ","ఎంవిపి కాలనీ","एमवीपी कॉलोनी","एम वी पी कॉलोनी"),
+ "dwaraka nagar": ("dwaraka nagar","dwarka nagar","ద్వారకా నగర్","ద్వారకానగర్","द्वारका नगर"),
+ "seethammadhara": ("seethammadhara","సీతమ్మధార","सीतम्मधारा"),
+ "nad junction": ("nad junction","ఎన్ఏడీ జంక్షన్","एनएडी जंक्शन"),
+ "akkayyapalem": ("akkayyapalem","అక్కయ్యపాలెం","अक्कय्यापालेम"),
+ "gopalapatnam": ("gopalapatnam","gopal pattnam","gopal patnam","गोपालपट्टनम","గోపాలపట్నం","గోపాలపట్నం వైపు","గోపాలపట్నం వైపు","గోపాలపట్నం"),
 }
 def normalize(s):
  s=unicodedata.normalize('NFKC',s).casefold()

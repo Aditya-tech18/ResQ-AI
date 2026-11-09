@@ -27,4 +27,13 @@ def home():
 
 @app.get("/v4.js")
 def script():
-    return FileResponse(ROOT / "frontend" / "v10.js", media_type="application/javascript")
+    return FileResponse(ROOT / "frontend" / "v10.js", media_type="application/javascript", headers={"Cache-Control": "no-store, max-age=0"})
+
+
+@app.get('/resq_hero_v22.css', include_in_schema=False)
+def v22_css():
+    return FileResponse(ROOT / 'frontend' / 'resq_hero_v22.css', media_type='text/css')
+
+@app.get('/resq_hero_v22.js', include_in_schema=False)
+def v22_js():
+    return FileResponse(ROOT / 'frontend' / 'resq_hero_v22.js', media_type='application/javascript')

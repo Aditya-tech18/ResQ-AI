@@ -62,7 +62,12 @@ async def transcribe(
             stdout=asyncio.subprocess.PIPE,
             stderr=asyncio.subprocess.PIPE,
         )
-        wav, errors = await process.communicate(data)
+        try:
+            wav, errors = await asyncio.wait_for(process.communicate(data), timeout=20)
+        except asyncio.TimeoutError:
+            process.kill()
+            await process.communicate()
+            raise HTTPException(422, 'Audio conversion exceeded 20 seconds')
         if process.returncode != 0 or not wav or len(wav) > MAX_AUDIO:
             raise HTTPException(422, "Unable to convert browser recording to WAV")
         data = wav
@@ -75,11 +80,11 @@ async def transcribe(
                 headers={"X-API-Key-ID": key},
                 files={"audio_file": (filename, data, audio.content_type or "application/octet-stream")},
                 data={
-                    "model": "prisma-v3.0",
+                    "model": os.getenv("RESQ_PRISMA_MODEL", "prisma-v3.0"),
                     "language_code": language,
                     "format": "codemix" if language in {"hi-IN", "hi-en", "indic-auto"} else "transcribe",
-                    "topic": "Delivery rescue: Raju's bike breakdown in Gajuwaka, Visakhapatnam; six pending parcels; drivers Amit and Suresh; parcel quantity, pickup ETA, destination and consent",
-                    "keyterms": '["Raju","Amit","Suresh","Gajuwaka","Visakhapatnam","parcel","pickup"]',
+                    "topic": "Delivery rescue coordination; parcel quantity, pickup ETA, route, destination and explicit call-end consent",
+                    "keyterms": '["parcel","pickup","route","delivery"]',
                 },
             )
             response.raise_for_status()
@@ -91,7 +96,7 @@ async def transcribe(
     return {
         "transcript": result["transcript"],
         "language": result.get("detected_language_code"),
-        "model": result.get("model", "prisma-v3.0"),
+        "model": result.get("model", os.getenv("RESQ_PRISMA_MODEL", "prisma-v3.0")),
         "provider": "gnani",
     }
 
@@ -117,7 +122,7 @@ async def speak(payload: SpeechRequest):
                 json={
                     "text": payload.text,
                     "voice": VOICES[payload.gender],
-                    "model": "timbre-v3.0",
+                    "model": os.getenv("RESQ_TIMBRE_MODEL", "timbre-v3.0"),
                     "language": payload.language,
                     "speed": 1.0,
                     "audio_config": {
@@ -143,7 +148,7 @@ async def speak(payload: SpeechRequest):
 async def status():
     return {
         "gnani_key_configured": bool(os.getenv("GNANI_API_KEY", "").strip()),
-        "prisma_model": "prisma-v3.0", "timbre_model": "timbre-v3.0",
+        "prisma_model": os.getenv("RESQ_PRISMA_MODEL", "prisma-v3.0"), "timbre_model": os.getenv("RESQ_TIMBRE_MODEL", "timbre-v3.0"),
         "real_phone_calling": False,
         "note": "Configured is not proof of successful provider access. Test transcribe and speak.",
     }
