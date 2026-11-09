@@ -1,4 +1,4 @@
-# DispatchResolve AI
+# ResQ AI
 
 AI-assisted last-mile delivery exception handling and ResQ rescue workflows.
 The repository includes a FastAPI backend, a local ResQ dashboard, and a
